@@ -101,7 +101,6 @@ elseif(EMSCRIPTEN)
 		-sGL_SUPPORT_AUTOMATIC_ENABLE_EXTENSIONS=0
 		-sGL_SUPPORT_SIMPLE_ENABLE_EXTENSIONS=0
 		-sINVOKE_RUN=0
-		-sLLD_REPORT_UNDEFINED
 		-sMODULARIZE=1
 		${COMMON_FLAGS})
 	link_libraries(GL)
@@ -478,6 +477,7 @@ set(SRC_CORE
   	${CMAKE_CURRENT_SOURCE_DIR}/boards/novel.cpp
   	${CMAKE_CURRENT_SOURCE_DIR}/boards/onebus.cpp
   	${CMAKE_CURRENT_SOURCE_DIR}/boards/pec-586.cpp
+  	${CMAKE_CURRENT_SOURCE_DIR}/boards/rainbow.cpp
   	${CMAKE_CURRENT_SOURCE_DIR}/boards/rt-01.cpp
   	${CMAKE_CURRENT_SOURCE_DIR}/boards/sa-9602b.cpp
   	${CMAKE_CURRENT_SOURCE_DIR}/boards/sachen.cpp

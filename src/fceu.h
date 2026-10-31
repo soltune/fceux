@@ -63,6 +63,18 @@ extern uint8 MMC50x5130;
 extern uint8 MMC5HackSPScroll;
 extern uint8 MMC5HackSPPage;
 
+// Rainbow (mapper 682) external shared buffers/vars
+extern int RNBWHack;
+extern uint8 *RNBWHackVPage[16];	// CHR pages with 512 byte granularity
+extern uint8 *RNBWHackExNTARAMPtr;	// FPGA-RAM
+extern uint8 *RNBWHackVROMPtr;		// CHR chip used by extended BG tiles
+extern uint32 RNBWHackVROMMask;
+extern uint8 RNBWHackNTcontrol[4];
+extern uint8 RNBWHackBGBankOffset;
+extern uint8 RNBWHackFillTile;
+extern uint8 RNBWHackFillAttr;
+extern void (*RNBWHackFrameStart)(void);	// Called at the start of scanline 0
+
 extern int PEC586Hack;
 
 // VRCV extarnal shared buffers/vars

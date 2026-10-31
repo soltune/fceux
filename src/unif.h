@@ -145,6 +145,7 @@ void UNLVRC7_Init(CartInfo *info);
 void UNLYOKO_Init(CartInfo *info);
 void UNROM_Init(CartInfo *info);
 void UNROM512_Init(CartInfo *info);
+void RAINBOW_Init(CartInfo *info);
 void UNLSB2000_Init(CartInfo *info);
 void UNLKS7010_Init(CartInfo *info);
 void COOLBOY_Init(CartInfo *info);

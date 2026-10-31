@@ -736,6 +736,8 @@ BMAPPINGLocal bmap[] = {
 
 	{"KONAMI QTAi Board",	547, QTAi_Init },
 
+	{"RAINBOW",				682, RAINBOW_Init },
+
 	{"",					0, NULL}
 };
 

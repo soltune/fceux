@@ -338,6 +338,17 @@ uint8 MMC50x5130 = 0;
 uint8 MMC5HackSPScroll = 0;
 uint8 MMC5HackSPPage = 0;
 
+int RNBWHack = 0;
+uint8 *RNBWHackVPage[16];
+uint8 *RNBWHackExNTARAMPtr = 0;
+uint8 *RNBWHackVROMPtr = 0;
+uint32 RNBWHackVROMMask = 0;
+uint8 RNBWHackNTcontrol[4];
+uint8 RNBWHackBGBankOffset = 0;
+uint8 RNBWHackFillTile = 0;
+uint8 RNBWHackFillAttr = 0;
+void (*RNBWHackFrameStart)(void) = 0;
+
 int PEC586Hack = 0;
 
 int QTAIHack = 0;
@@ -1195,6 +1206,13 @@ static void RefreshLine(int lastpixel) {
 		}
 	}
 	#undef PPUT_MMC5
+	else if (RNBWHack && geniestage != 1) {
+		#define PPUT_RNBW
+		for (X1 = firsttile; X1 < lasttile; X1++) {
+			#include "pputile.inc"
+		}
+		#undef PPUT_RNBW
+	}
 	else if (PPU_hook) {
 		norecurse = 1;
 		#define PPUT_HOOK
@@ -1474,6 +1492,8 @@ static void FetchSpriteData(void) {
 					/* Fix this geniestage hack */
 					if (MMC5Hack && geniestage != 1)
 						C = MMC5SPRVRAMADR(vadr);
+					else if (RNBWHack && geniestage != 1)
+						C = &RNBWHackVPage[vadr >> 9][vadr];
 					else
 						C = VRAMADR(vadr);
 
@@ -1531,6 +1551,8 @@ static void FetchSpriteData(void) {
 
 					if (MMC5Hack)
 						C = MMC5SPRVRAMADR(vadr);
+					else if (RNBWHack && geniestage != 1)
+						C = &RNBWHackVPage[vadr >> 9][vadr];
 					else
 						C = VRAMADR(vadr);
 					if (SpriteON)
@@ -1848,6 +1870,8 @@ int FCEUPPU_Loop(int skip) {
 			X6502_Run(16 - kook);
 			kook ^= 1;
 		}
+		if (RNBWHackFrameStart)
+			RNBWHackFrameStart();
 		if (GameInfo->type == GIT_NSF)
 			X6502_Run((256 + 85) * normalscanlines);
 		#ifdef FRAMESKIP

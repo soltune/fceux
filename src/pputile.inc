@@ -40,6 +40,38 @@ if (X1 >= 2) {
 	P += 8;
 }
 
+#ifdef PPUT_RNBW
+{
+	// Rainbow: per nametable fill mode and extended attributes/BG tiles.
+	uint8 rnbw_ctrl = RNBWHackNTcontrol[(RefreshAddr >> 10) & 3];
+	uint8 rnbw_ext = 0;
+	zz = RefreshAddr & 0x1F;
+	C = vnapage[(RefreshAddr >> 10) & 3];
+	if (rnbw_ctrl & 0x03)
+		rnbw_ext = RNBWHackExNTARAMPtr[((rnbw_ctrl & 0x0C) << 8) | (RefreshAddr & 0x3ff)];
+	vadr = (((rnbw_ctrl & 0x20) ? RNBWHackFillTile : C[RefreshAddr & 0x3ff]) << 4) + vofs;
+
+	if (rnbw_ctrl & 0x01)
+		cc = rnbw_ext >> 6;
+	else if (rnbw_ctrl & 0x20)
+		cc = RNBWHackFillAttr;
+	else {
+		cc = C[0x3c0 + (zz >> 2) + ((RefreshAddr & 0x380) >> 4)];
+		cc = ((cc >> ((zz & 2) + ((RefreshAddr & 0x40) >> 4))) & 3);
+	}
+
+	atlatch >>= 2;
+	atlatch |= cc << 2;
+
+	pshift[0] <<= 8;
+	pshift[1] <<= 8;
+
+	if (rnbw_ctrl & 0x02)
+		C = RNBWHackVROMPtr + (((vadr & 0xfff) | ((rnbw_ext & 0x3f) << 12) | (RNBWHackBGBankOffset << 18)) & RNBWHackVROMMask);
+	else
+		C = &RNBWHackVPage[vadr >> 9][vadr];
+}
+#else
 #ifdef PPUT_MMC5SP
 	vadr = (MMC5HackExNTARAMPtr[xs | (ys << 5)] << 4) + (vofs & 7);
 #else
@@ -97,6 +129,8 @@ pshift[1] <<= 8;
 
 	#endif
 #endif
+
+#endif // PPUT_RNBW
 
 #ifdef PPUT_HOOK
 	PPU_hook(vadr);
